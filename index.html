@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        input{
+            width: 200px;
+
+        }
+
+        #movie{
+            height: 200px;
+            width: 209px;
+            border: 1px solid black;
+            border-top: none;
+            overflow: scroll;
+        }
+        #container{
+            display: flex;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <input oninput="debounceFunction(main,1000)" type="text" id="query">
+
+    <div id="movie"></div>
+
+    <div id="container"></div>
+</body>
+</html>
+
+<script>
+
+    let id;
+let movies_appending=document.getElementById("movie")
+
+
+async function searchMovies(q){
+
+// prepare  url
+try{
+let url=`https://www.omdbapi.com/?s=${q}&apikey=d806bd70`;
+
+let res=await fetch(url)
+
+let data= await res.json()
+
+console.log(data.Search)
+
+ return data.Search
+
+
+}
+
+catch(err){
+console.log("err:",err);
+}
+
+}
+
+// appending part
+
+function appendMovies(movies){
+
+    movies_appending.innerHTML=""
+    
+
+    if(movies===undefined)
+    {
+        return false
+    }
+
+    movies.forEach(function(el){
+
+let p=document.createElement("p")
+
+p.innerText=el.Title
+
+p.addEventListener("click",function(){
+
+    mapcall(el.Poster,el.Title,el.Year,el.imdbID)
+})
+
+movies_appending.append(p)
+
+
+
+
+    })
+
+}
+
+function mapcall(Poster,Title,Type,Year,imdbID){
+    //console.log(oster,Title,Type,Year)
+
+
+    let mamta=document.createElement("div")
+
+    // mamta.setAttribute("class","mantu")
+
+    let img=document.createElement("img")
+
+    img.src=Poster
+
+    let title=document.createElement("h2")
+
+    title.innerText=Title
+
+    let type=document.createElement("h3")
+
+    type.innerText=Type
+
+    let year=document.createElement("p")
+
+    year.innerText=Year
+
+    let imdb=document.createElement("p")
+
+imdb.innerText=imdbID
+
+
+
+    mamta.append(img,title,type,type,imdbID)
+
+    container.append(mamta)
+}
+
+   async function main(){
+let query=document.getElementById("query").value
+
+let response=searchMovies(query)
+
+let  data=await response;
+
+appendMovies(data)
+
+    }
+
+// debounsing
+
+
+function debounceFunction(func,delay){
+
+    if(id){
+        clearTimeout(id);
+    }
+
+    id=setTimeout(function(){
+        func();
+    },delay);
+}
+
+</script>
+
+ <!-- 7592a4c96fcb2c6c3a94217789858d16 -->
